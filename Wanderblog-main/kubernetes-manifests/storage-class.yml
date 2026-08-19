@@ -4,9 +4,9 @@ metadata:
   name: mongo-storage
   annotations:
     storageclass.kubernetes.io/is-default-class: "true"
-provisioner: ebs.csi.aws.com
+provisioner: disk.csi.azure.com
 parameters:
-  type: gp3
+  skuName: StandardSSD_LRS
 volumeBindingMode: WaitForFirstConsumer
 reclaimPolicy: Retain
 allowVolumeExpansion: true

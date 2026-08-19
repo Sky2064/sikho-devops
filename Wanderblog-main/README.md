@@ -13,6 +13,8 @@ This application is based on a three tier architecture which includes frontend, 
 
 ## Steps to be followed for Deployment on Kubernetes
 
+If you want to deploy to Azure Kubernetes Service (AKS) instead of EKS, see `AKS_DEPLOY.md` for AKS-specific instructions (ACR, ingress-nginx, cert-manager, storage class).
+
 #### 1. Setup an EKS Cluster on AWS 
 
 - This can be done either manually or using CLI or through IaC (Terraform)
