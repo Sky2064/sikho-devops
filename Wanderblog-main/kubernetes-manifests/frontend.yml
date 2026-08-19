@@ -24,9 +24,14 @@ spec:
               topologyKey: topology.kubernetes.io/zone
       containers:
         - name: frontend
-          image: gauris17/wanderblog-frontend:v1
+          # Updated to use your ACR. Replace tag if needed.
+          image: acrgsky.azurecr.io/wanderblog-frontend:v1
           ports:
             - containerPort: 80
           envFrom:
             - configMapRef:
                 name: frontend-config
+      # If your ACR requires imagePullSecrets, create a secret:
+      # kubectl create secret docker-registry acr-secret --docker-server=acrgsky.azurecr.io --docker-username=<USERNAME> --docker-password=<PASSWORD> --docker-email=<EMAIL>
+      # then add `imagePullSecrets:
+      # - name: acr-secret` under `spec:`

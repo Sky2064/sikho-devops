@@ -51,11 +51,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+      - name: Login to Azure
+        uses: azure/login@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: acrgsky.azurecr.io
 
       - name: Get latest image tag
         id: get_tag
@@ -80,7 +84,7 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.get_tag.outputs.next_tag }}
+          tags: acrgsky.azurecr.io/${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.get_tag.outputs.next_tag }}
 
       - name: Output image URI
         run: |
@@ -90,7 +94,7 @@ jobs:
         env:
           IMAGE_TAG: ${{ steps.get_tag.outputs.next_tag }}
         run: |
-          sed -i "s|image: ${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}:.*|image: ${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}:$IMAGE_TAG|g" \
+          sed -i "s|image: .*/${{ env.FRONTEND_IMAGE_NAME }}:.*|image: acrgsky.azurecr.io/${{ env.FRONTEND_IMAGE_NAME }}:$IMAGE_TAG|g" \
             ../kubernetes-manifests/frontend.yml   # Change to your manifest path
 
       - name: Commit and push updated frontend manifest
@@ -116,11 +120,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+      - name: Login to Azure
+        uses: azure/login@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: acrgsky.azurecr.io
       - name: Get latest image tag
         id: get_tag
         run: |
@@ -141,7 +149,7 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}:${{ steps.get_tag.outputs.next_tag }}
+          tags: acrgsky.azurecr.io/${{ env.BACKEND_IMAGE_NAME }}:${{ steps.get_tag.outputs.next_tag }}
       - name: Output image URI
         run: |
           echo "Backend image: ${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}:${{ steps.get_tag.outputs.next_tag }}"
@@ -149,7 +157,7 @@ jobs:
         env:
           IMAGE_TAG: ${{ steps.get_tag.outputs.next_tag }}
         run: |
-          sed -i "s|image: ${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}:.*|image: ${{ secrets.DOCKER_USERNAME }}/${{ env.BACKEND_IMAGE_NAME }}:$IMAGE_TAG|g" \
+          sed -i "s|image: .*/${{ env.BACKEND_IMAGE_NAME }}:.*|image: acrgsky.azurecr.io/${{ env.BACKEND_IMAGE_NAME }}:$IMAGE_TAG|g" \
             ../kubernetes-manifests/backend.yml   # Change to your manifest path
       - name: Commit and push updated backend manifest
         run: |
