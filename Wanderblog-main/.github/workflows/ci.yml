@@ -57,9 +57,8 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Login to ACR
-        uses: azure/docker-login@v1
-        with:
-          login-server: acrgsky.azurecr.io
+        run: |
+          az acr login --name acrgsky
 
       - name: Get latest image tag
         id: get_tag
@@ -126,9 +125,8 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Login to ACR
-        uses: azure/docker-login@v1
-        with:
-          login-server: acrgsky.azurecr.io
+        run: |
+          az acr login --name acrgsky
       - name: Get latest image tag
         id: get_tag
         run: |
