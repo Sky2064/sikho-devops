@@ -30,9 +30,9 @@ jobs:
         with:
           filters: |
             frontend:
-              - 'frontend/**'
+              - 'Wonderblog/frontend/**'
             backend:
-              - 'server/**'
+              - 'Wonderblog/server/**'
 
   # ─────────────────────────────────────────
   # FRONTEND
@@ -81,7 +81,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./frontend
+          context: .Wanderblog/frontend
           file: ./frontend/Dockerfile
           push: true
           tags: acrgsky.azurecr.io/${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.get_tag.outputs.next_tag }}
