@@ -30,9 +30,9 @@ jobs:
         with:
           filters: |
             frontend:
-              - 'Wonderblog/frontend/**'
+              - 'frontend/**'
             backend:
-              - 'Wonderblog/server/**'
+              - 'server/**'
 
   # ─────────────────────────────────────────
   # FRONTEND
@@ -45,7 +45,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: frontend           # Change to your frontend directory
+        working-directory: Wanderblog-main/frontend           # Change to your frontend directory
 
     steps:
       - name: Checkout code
@@ -116,7 +116,7 @@ jobs:
     if: needs.changes.outputs.backend == 'true'
     defaults:
       run:
-        working-directory: server
+        working-directory: Wanderblog-main/server
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
