@@ -40,8 +40,8 @@ jobs:
   frontend:
     name: Frontend — Test, Build & Push
     runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.frontend == 'true'
+    # needs: changes
+    # if: needs.changes.outputs.frontend == 'true'
 
     defaults:
       run:
@@ -110,8 +110,8 @@ jobs:
   backend:
     name: Backend — Test, Build & Push
     runs-on: ubuntu-latest
-    needs: changes
-    if: needs.changes.outputs.backend == 'true'
+    # needs: changes
+    # if: needs.changes.outputs.backend == 'true'
 
     defaults:
       run:
