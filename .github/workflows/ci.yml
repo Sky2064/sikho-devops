@@ -126,8 +126,8 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Login to ACR
-          run |
-            az acr login --name acrgsky
+        run: |
+          az acr login --name acrgsky
 
       - name: Get latest image tag
         id: get_tag
