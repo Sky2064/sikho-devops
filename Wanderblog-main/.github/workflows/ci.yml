@@ -33,7 +33,6 @@ jobs:
               - 'frontend/**'
             backend:
               - 'server/**'
-
   # ─────────────────────────────────────────
   # FRONTEND
   # ─────────────────────────────────────────
@@ -57,8 +56,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Login to ACR
-        run: |
-          az acr login --name acrgsky
+        uses: azure/docker-login@v1
+        with:
+          login-server: acrgsky.azurecr.io
 
       - name: Get latest image tag
         id: get_tag
@@ -67,16 +67,13 @@ jobs:
               | jq -r '.results[].name' \
               | grep -E '^v[0-9]+$' \
               | sort -V | tail -1)
-
             if [ -z "$LATEST" ]; then
               NEXT_TAG="v1"
             else
               VERSION=${LATEST#v}
               NEXT_TAG="v$((VERSION + 1))"
             fi
-
             echo "next_tag=$NEXT_TAG" >> $GITHUB_OUTPUT
-
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -88,14 +85,12 @@ jobs:
       - name: Output image URI
         run: |
           echo "Frontend image: ${{ secrets.DOCKER_USERNAME }}/${{ env.FRONTEND_IMAGE_NAME }}:${{ steps.get_tag.outputs.next_tag }}"
-
       - name: Update K8s manifest with new frontend image tag
         env:
           IMAGE_TAG: ${{ steps.get_tag.outputs.next_tag }}
         run: |
           sed -i "s|image: .*/${{ env.FRONTEND_IMAGE_NAME }}:.*|image: acrgsky.azurecr.io/${{ env.FRONTEND_IMAGE_NAME }}:$IMAGE_TAG|g" \
             ../kubernetes-manifests/frontend.yml   # Change to your manifest path
-
       - name: Commit and push updated frontend manifest
         run: |
           git config user.name "Gauri Shirkande"
@@ -104,7 +99,6 @@ jobs:
           git add ../kubernetes-manifests/frontend.yml
           git diff --cached --quiet || git commit -m "ci: update frontend image to ${{ steps.get_tag.outputs.next_tag }}"
           git push
-
    # ─────────────────────────────────────────
   # BACKEND
   # ─────────────────────────────────────────
@@ -125,8 +119,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Login to ACR
-        run: |
-          az acr login --name acrgsky
+        uses: azure/docker-login@v1
+        with:
+          login-server: acrgsky.azurecr.io
       - name: Get latest image tag
         id: get_tag
         run: |
@@ -165,4 +160,3 @@ jobs:
           git add ../kubernetes-manifests/backend.yml
           git diff --cached --quiet || git commit -m "ci: update backend image to ${{ steps.get_tag.outputs.next_tag }}"
           git push
-
