@@ -152,11 +152,11 @@ jobs:
         run: |
           sed -i "s|image: .*/${{ env.BACKEND_IMAGE_NAME }}:.*|image: acrgsky.azurecr.io/${{ env.BACKEND_IMAGE_NAME }}:$IMAGE_TAG|g" \
             ../kubernetes-manifests/backend.yml   # Change to your manifest path
-      - name: Commit and push updated backend manifest
-        run: |
-          git config user.name "Gauri Shirkande"
-          git config user.email "gaurishirkande11111@gmail.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add ../kubernetes-manifests/backend.yml
-          git diff --cached --quiet || git commit -m "ci: update backend image to ${{ steps.get_tag.outputs.next_tag }}"
-          git push
+      # - name: Commit and push updated backend manifest
+      #   run: |
+      #     git config user.name "Gauri Shirkande"
+      #     git config user.email "gaurishirkande11111@gmail.com"
+      #     git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+      #     git add ../kubernetes-manifests/backend.yml
+      #     git diff --cached --quiet || git commit -m "ci: update backend image to ${{ steps.get_tag.outputs.next_tag }}"
+      #     git push
